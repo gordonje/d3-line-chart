@@ -1,4 +1,4 @@
-web-app-template-simple
+d3-line-chart
 =======================
 
-A simple web app template with jQuery, and Bootstrap.  | Mizzou Workshop - Oct. 2014
+A line chart using CoMO specific unemployment data from BLS, an exercise for Chris Canipe's d3 class.
