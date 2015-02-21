@@ -1,4 +1,4 @@
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
+var margin = {top: 20, right: 20, bottom: 60, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -10,7 +10,8 @@ var y = d3.scale.linear()
 
 var xAxis = d3.svg.axis()
     .scale(x)
-    .orient("bottom");
+    .orient("bottom")
+    .ticks(d3.time.month, 3);
 
 var yAxis = d3.svg.axis()
     .scale(y)
@@ -52,7 +53,12 @@ d3.csv("./data/clean_data.csv", function(d) {
 	svg.append("g")
 		.attr("class", "x axis")
 		.attr("transform", "translate(0," + height + ")")
-		.call(xAxis);
+		.call(xAxis)
+        .selectAll("text")  
+            .style("text-anchor", "end")
+            .attr("dx", "-.8em")
+            .attr("dy", ".15em")
+            .attr("transform", "rotate(-65)");
 
 	svg.append("g")
 		.attr("class", "y axis")
