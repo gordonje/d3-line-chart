@@ -15,7 +15,17 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+    .tickFormat(function(d, i) {
+
+        if (i%2 === 0) {
+            return "X"
+        } else {
+            return d.toFixed(1)+"%"
+        }
+
+        
+    });
 
 var line = d3.svg.line()
 // switched the keys for these
@@ -74,6 +84,16 @@ d3.csv("./data/clean_data.csv", function(d) {
 		.datum(rows)
 		.attr("class", "line")
 		.attr("d", line);
+
+    svg.selectAll('.dot')
+        .data(rows)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("cx", function(d) { return x(d.date); })
+        .attr("cy", function(d) { return y(d.unemploymentRate); })
+        .attr("r", 4);
+
 });
 
 

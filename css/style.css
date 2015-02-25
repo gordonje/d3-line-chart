@@ -19,7 +19,12 @@ body {
   stroke-width: 1.5px;
 }
 
+.dot {
+	fill: steelblue;
+	stroke: steelblue;
+}
 
 .chart {
   height: 500px;
 }
+
