@@ -2,6 +2,10 @@ body {
   font: 10px sans-serif;
 }
 
+.chart {
+  height: 500px;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -21,10 +25,30 @@ body {
 
 .dot {
 	fill: steelblue;
-	stroke: steelblue;
 }
 
-.chart {
-  height: 500px;
+.dot.active {
+  fill: red;
 }
 
+.tt {
+  background-color: white;
+  font-size: 13px;
+  position: absolute;
+  display: none;
+  padding: 8px;
+  box-shadow: 2px 2px 6px #666;
+
+}
+
+.tt .date {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+.tt .val {
+  font-size: 18px;
+  font-weight: bold;
+}
+  
