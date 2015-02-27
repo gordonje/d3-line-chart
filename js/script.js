@@ -2,7 +2,7 @@ var margin = {top: 20, right: 20, bottom: 60, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-// Specifying the various formats of dates I know I want to use
+// Specifying the various formats of dates I know I want to use (Read more: https://github.com/mbostock/d3/wiki/Time-Formatting)
 // First, use this methodin order to convert the current format of dates in our data into js date objects
 var parseDate = d3.time.format("%e-%b-%y").parse;
 // And a year format (e.g., "2004")
@@ -21,7 +21,11 @@ var y = d3.scale.linear()
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom")
+    // How we tell d3 to create ticks every three months (like business quarters). 
+    // Read more here: https://github.com/mbostock/d3/wiki/Time-Scales#ticks
     .ticks(d3.time.month, 3)
+    // With this interval and step, the default tick labels will vary using the full month name and four-digit year
+    // But I want to vary using abbreviated month and four-digit year
     .tickFormat(function(d, i) {
         if (d.getMonth() === 0) {
             return yearFormat(d);
@@ -60,7 +64,7 @@ d3.csv("./data/clean_data.csv", function(d) {
         , unemployment: +d.unemployment
         , unemploymentRate: +d.unemployment_rate
     };
-
+// the third argument is the callback function (do I have that right?)
 }, function(error, rows) {
 	x.domain(d3.extent(rows, function(d) { return d.date; }));
 	y.domain(d3.extent(rows, function(d) { return d.unemploymentRate; }));
@@ -110,37 +114,34 @@ d3.csv("./data/clean_data.csv", function(d) {
         .enter()
         .append("circle")
         .attr("class", "dot")
-        .attr("cx", function(d) { return x(d.date); })
+        .attr("cx", function(d) { console.log(d.date); return x(d.date); })
         .attr("cy", function(d) { return y(d.unemploymentRate); })
         .attr("r", 4)
         .on("mouseover", function(d) {
-            
-      //We used the moment() method to create a date string
-      //Moment comes from the moment.js library, which we're loading in our index.html page
-        
-      // .tt is the class of a div we've added to our chart in the index.html file
-      // .tt is where we put our date and unemployment data to be displayed
-      $(".tt").html(
-            "<div class='date'>"+ d.monthYear +"</div>"+
-            "<div class='val'>"+ d.unemploymentRate +"%</div>"
-        );
+          // .tt is the class of a div we've added to our chart in the index.html file
+            $(".tt").html(
+              // .tt is where we put our date and unemployment data to be displayed
+              "<div class='date'>"+ d.monthYear +"</div>"+
+              "<div class='val'>"+ d.unemploymentRate +"%</div>"
+          );
+          //Adding .active class to this circle so it turns red.
+          d3.select(this)
+          //The fill color for .dot.active is set in style.css  
+            .classed("active", true)
+          // increasing the radius of the circle
+            .attr("r", 7);
 
-      //Adding .active class to this circle so it turns red.
-      //The fill color for .dot.active is set in style.css
-      d3.select(this)
-        .classed("active", true)
-        .attr("r", 7);
-
-      //In the css, .tt has a 'display' property set to 'hidden'. This keeps it from showing up on page load.
-      //When we roll over it, we use the show() method to see it.
+      // In the css, .tt has a 'display' property set to 'hidden'. This keeps it from showing up on page load.
+      // When we roll over it, we use the show() method to see it.
         $(".tt").show();
     })
-    //On 'mouseout', we hide the tooltip again.
+    // On 'mouseout', we hide the tooltip again.
     .on("mouseout", function(d) {
 
       //Remoing .active class to this circle so it turns back to blue.
       d3.select(this)
         .classed("active", false)
+        // Also, reset the radius to 4
         .attr("r", 4);
         
       $(".tt").hide();
@@ -152,15 +153,11 @@ d3.csv("./data/clean_data.csv", function(d) {
       //It shows up as a two value array [x, y]
       var pos = d3.mouse(this);
     
-      //Here we do some math to get the tooltip to show up where we want it...
-      //...in relation to the mouse
-      //we add margin.left + 15 to account for the chart 'g' margin and the padding of the .chart div.
-        var left = pos[0] //+ margin.left - ($(".tt").outerWidth()/4);
+      var left = pos[0] // + margin.left + 15 - ($(".tt").outerWidth()/2);
 
       //Here we add the top margin and subtract the height of the tooltip so it displays above our mouse
-        var top = pos[1] //+ margin.top - $(".tt").height() - 30;
+      var top = pos[1] + 50 // + margin.top - $(".tt").height() - 30
 
-      //With our two positions defined, we now apply them to our tooltip with the jQuery css method.
         $(".tt").css({
             "left" : left+"px",
             "top" : top+"px"
