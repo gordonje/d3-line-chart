@@ -114,7 +114,7 @@ d3.csv("./data/clean_data.csv", function(d) {
         .enter()
         .append("circle")
         .attr("class", "dot")
-        .attr("cx", function(d) { console.log(d.date); return x(d.date); })
+        .attr("cx", function(d) { return x(d.date); })
         .attr("cy", function(d) { return y(d.unemploymentRate); })
         .attr("r", 4)
         .on("mouseover", function(d) {
